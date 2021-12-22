@@ -21,7 +21,7 @@ export const Register = () => {
           },
           body: JSON.stringify(user)
         }).then(res => res.json()).then(createdUser => {
-          if (createdUser.hasOwnPropery('id')) {
+          if (createdUser.hasOwnProperty('id')) {
             localStorage.setItem('roadtrip_user', JSON.stringify(createdUser));
             navigate('/');
           }
@@ -53,7 +53,7 @@ export const Register = () => {
                   Email
                 </Form.Label>
                 <Col sm="9">
-                  <Form.Control type="text" onChange={(e) => setUser({ email: e.target.value })} />
+                  <Form.Control type="text" onChange={(e) => setUser({ ...user, email: e.target.value })} />
                 </Col>
               </Form.Group>
               <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
@@ -61,10 +61,10 @@ export const Register = () => {
                   Name
                 </Form.Label>
                 <Col sm="9">
-                  <Form.Control type="text" onChange={(e) => setUser({ name: e.target.value })} />
+                  <Form.Control type="text" onChange={(e) => setUser({ ...user, name: e.target.value })} />
                 </Col>
               </Form.Group>
-              <Button className='form-control' >Register</Button>
+              <Button className='form-control' type='submit'>Register</Button>
             </Form>
           </Card.Body>
           <p>Already Have an account? <Link to='/login'>Login</Link></p>

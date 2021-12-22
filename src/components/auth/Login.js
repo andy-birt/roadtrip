@@ -46,7 +46,7 @@ export const Login = () => {
                   <Form.Control onChange={(e) => setEmail(e.target.value)}  type="text" />
                 </Col>
               </Form.Group>
-              <Button className='form-control' >Login</Button>
+              <Button className='form-control' type='submit'>Login</Button>
             </Form>
           </Card.Body>
           <p>Don't Have an account? <Link to='/register'>Register</Link></p>
