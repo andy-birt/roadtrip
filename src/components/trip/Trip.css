@@ -1,0 +1,19 @@
+.trips a {
+  color: #333;
+  text-decoration: none;
+}
+
+.trip {
+  margin-bottom: 2rem;
+}
+
+@media screen and (min-width: 576px) {
+  .trips {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .trips a {
+    flex-basis: 33%;
+  }
+}

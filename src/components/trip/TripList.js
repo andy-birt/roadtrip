@@ -1,6 +1,7 @@
 import { useContext, useEffect } from "react";
 import { TripContext } from "./TripProvider";
 import { Trip } from "./Trip";
+import { CardGroup, Container } from "react-bootstrap";
 
 export const TripList = () => {
 
@@ -11,10 +12,13 @@ export const TripList = () => {
   }, []);
 
   return (
-    <>
-      {
-        trips.map(trip => <Trip key={trip.id} trip={trip}/>)
-      }
-    </>
+    <Container>
+      <h2>Trips</h2>
+      <CardGroup bsPrefix='trips'>
+        {
+          trips.map(trip => <Trip key={trip.id} trip={trip}/>)
+        }
+      </CardGroup>
+    </Container>
   );
 }
