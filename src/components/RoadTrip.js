@@ -1,4 +1,3 @@
-import { Container } from "react-bootstrap";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ApplicationViews } from "./ApplicationViews";
 import { Login } from './auth/Login';
