@@ -1,6 +1,6 @@
 import { createControlComponent } from "@react-leaflet/core";
 import { Control, DomUtil } from "leaflet";
-
+import "./SearchBox.css";
 
 //* Setup the SearchBox component
 Control.SearchBox = Control.extend({

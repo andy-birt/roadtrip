@@ -1,0 +1,3 @@
+.search-container input::-webkit-calendar-picker-indicator{
+  display: none !important;
+}
