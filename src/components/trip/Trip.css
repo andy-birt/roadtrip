@@ -7,6 +7,10 @@
   margin-bottom: 2rem;
 }
 
+.point-of-interest-list {
+  flex-basis: 25%;
+}
+
 @media screen and (min-width: 576px) {
   .trips {
     display: flex;
