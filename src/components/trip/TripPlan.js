@@ -1,9 +1,10 @@
-import { useParams } from "react-router-dom";
 import { Row, Col, Card, Container } from "react-bootstrap";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from 'leaflet';
-import { SearchBox } from "../searchbox/SearchBox";
+import { RoadTripMap } from "../map/RoadTripMap";
 
+
+//! For some reason we have to manually delete the default icon
+//! and pull it locally... manually...
 delete L.Icon.Default.prototype._getIconUrl;
 
 L.Icon.Default.mergeOptions({
@@ -16,8 +17,6 @@ L.Icon.Default.mergeOptions({
 
 
 export const TripPlan = () => {
-  const { tripId } = useParams();
-  console.log(L)
   return (
     <div className="d-flex">
       <div className="point-of-interest-list">
@@ -39,17 +38,7 @@ export const TripPlan = () => {
           </Row>
         </Container>
       </div>
-      <MapContainer style={{height: '100vh', width: '75vw'}}  center={[51.505, -0.09]} zoom={13} scrollWheelZoom={false}>
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <Marker position={[51.505, -0.09]}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
-      </MapContainer>
+      <RoadTripMap />
     </div>
   );
 }
