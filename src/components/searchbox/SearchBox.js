@@ -1,5 +1,5 @@
 import { createControlComponent } from "@react-leaflet/core";
-import { Control, DomUtil, DomEvent } from "leaflet";
+import { Control, DomUtil, DomEvent, LatLng, marker} from "leaflet";
 import "./SearchBox.css";
 
 //* Setup the SearchBox component
@@ -12,6 +12,7 @@ Control.SearchBox = Control.extend({
     //* Create the component from JS scratch basically
     //* We need to use DomUtil.create() here to create the element
     //* or else this will throw errors in the application
+    let searchResults = [];
 
     const searchBoxContainer = DomUtil.create('div', 'search-container');
 
@@ -29,14 +30,26 @@ Control.SearchBox = Control.extend({
       return fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${e.target.value}&accept-language=en&countrycodes=us&limit=5`)
       .then(res => res.json())
       .then(results => {
+        searchResults = results.slice();
+        document.getElementById('search-results').innerHTML = '';
         document.getElementById('search-results').append(...results.map( result => {
           const currentResult = DomUtil.create('option');
-          currentResult.innerText = result.display_name;
+          currentResult.value = result.display_name;
           return currentResult;
         }));
       });
     });
 
+    DomEvent.on(searchInput, 'input', (e) => {
+      if (!e.inputType) {
+        const selected = searchResults.find(r => r.display_name === e.target.value);
+        const location = new LatLng(+selected.lat, +selected.lon);
+        map.panTo(location);
+        marker(location).addTo(map);
+        console.log(selected)
+        console.log(map)
+      }
+    });
 
     return searchBoxContainer;
   }
