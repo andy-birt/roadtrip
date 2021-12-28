@@ -45,7 +45,8 @@ Control.SearchBox = Control.extend({
         const selected = searchResults.find(r => r.display_name === e.target.value);
         const location = new LatLng(+selected.lat, +selected.lon);
         map.panTo(location);
-        marker(location).addTo(map);
+        marker(location).addTo(map)
+        .bindPopup(`<span>${selected.display_name}</span><button class='btn btn-primary form-control'>Add to Trip</button>`);
         console.log(selected)
         console.log(map)
       }
