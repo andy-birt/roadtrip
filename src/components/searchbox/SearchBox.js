@@ -1,5 +1,5 @@
 import { createControlComponent } from "@react-leaflet/core";
-import { Control, DomUtil } from "leaflet";
+import { Control, DomUtil, DomEvent } from "leaflet";
 import "./SearchBox.css";
 
 //* Setup the SearchBox component
@@ -24,10 +24,19 @@ Control.SearchBox = Control.extend({
     searchDataList.id="search-results";
     searchBoxContainer.appendChild(searchDataList);
 
-    const testResult1 = DomUtil.create('option');
-    testResult1.innerText = 'result1';
+    DomEvent.on(searchInput, 'keyup', (e) => {
 
-    searchDataList.appendChild(testResult1)
+      return fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${e.target.value}&accept-language=en&countrycodes=us&limit=5`)
+      .then(res => res.json())
+      .then(results => {
+        document.getElementById('search-results').append(...results.map( result => {
+          const currentResult = DomUtil.create('option');
+          currentResult.innerText = result.display_name;
+          return currentResult;
+        }));
+      });
+    });
+
 
     return searchBoxContainer;
   }
