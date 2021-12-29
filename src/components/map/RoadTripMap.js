@@ -9,7 +9,7 @@ export const RoadTripMap = () => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <SearchBox />
-      <ZoomControl />
+      <ZoomControl position="bottomleft"/>
       <Marker position={[38.047639685322494, -81.12339107346091]}>
         <Popup>
           A pretty CSS3 popup. <br /> Easily customizable.
