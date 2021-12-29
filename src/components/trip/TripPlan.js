@@ -23,7 +23,7 @@ export const TripPlan = () => {
         <Container>
           <Row xs={1} className="g-4 pt-3">
             {Array.from({ length: 4 }).map((_, idx) => (
-              <Col>
+              <Col key={idx}>
                 <Card>
                   <Card.Body>
                     <Card.Title>Card title</Card.Title>
