@@ -1,6 +1,9 @@
-import { Row, Col, Card, Container } from "react-bootstrap";
 import L from 'leaflet';
+import { useContext } from 'react';
+import { Row, Container } from "react-bootstrap";
 import { RoadTripMap } from "../map/RoadTripMap";
+import { PointOfInterestContext } from "../pointOfInterest/PointOfInterestProvider";
+import { PointOfInterest } from "../pointOfInterest/PointOfInterest";
 
 
 //! For some reason we have to manually delete the default icon
@@ -17,23 +20,16 @@ L.Icon.Default.mergeOptions({
 
 
 export const TripPlan = () => {
+
+  const { pointOfInterests } = useContext(PointOfInterestContext);
+
   return (
     <div className="d-flex">
       <div className="point-of-interest-list">
         <Container>
           <Row xs={1} className="g-4 pt-3">
-            {Array.from({ length: 4 }).map((_, idx) => (
-              <Col key={idx}>
-                <Card>
-                  <Card.Body>
-                    <Card.Title>Card title</Card.Title>
-                    <Card.Text>
-                      This is a longer card with supporting text below as a natural
-                      lead-in to additional content. This content is a little bit longer.
-                    </Card.Text>
-                  </Card.Body>
-                </Card>
-              </Col>
+            {pointOfInterests.map((poi) => (
+              <PointOfInterest key={poi.id} poi={poi} />
             ))}
           </Row>
         </Container>
