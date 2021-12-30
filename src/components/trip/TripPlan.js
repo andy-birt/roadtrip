@@ -1,9 +1,11 @@
 import L from 'leaflet';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Row, Container } from "react-bootstrap";
 import { RoadTripMap } from "../map/RoadTripMap";
 import { PointOfInterestContext } from "../pointOfInterest/PointOfInterestProvider";
 import { PointOfInterest } from "../pointOfInterest/PointOfInterest";
+import { POIRoutesContext } from '../poiRoutes/POIRoutesProvider';
 
 
 //! For some reason we have to manually delete the default icon
@@ -19,9 +21,23 @@ L.Icon.Default.mergeOptions({
 
 
 
-export const TripPlan = () => {
+export const TripPlan = ({ homeCoords }) => {
 
-  const { pointOfInterests } = useContext(PointOfInterestContext);
+  const { pointOfInterests, getPointOfInterests } = useContext(PointOfInterestContext);
+
+  const { getRoutes } = useContext(POIRoutesContext);
+
+  const { tripId } = useParams();
+
+  useEffect(() => {
+
+    if (pointOfInterests.length === 0) {
+      getPointOfInterests(tripId);
+    } else {
+      const POICoords = [ homeCoords, ...pointOfInterests.map(poi => [poi.latlon.lat, poi.latlon.lng]) ];
+      getRoutes(POICoords);
+    }
+  }, [pointOfInterests.length]);
 
   return (
     <div className="d-flex">
@@ -34,7 +50,7 @@ export const TripPlan = () => {
           </Row>
         </Container>
       </div>
-      <RoadTripMap />
+      <RoadTripMap homeCoords={homeCoords} pointOfInterests={pointOfInterests} tripId={tripId}/>
     </div>
   );
 }
