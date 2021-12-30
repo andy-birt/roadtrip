@@ -1,34 +1,31 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { Button } from "react-bootstrap";
-import { MapContainer, TileLayer, Marker, Popup, ZoomControl } from "react-leaflet";
-import { useParams } from "react-router-dom";
+import { MapContainer, TileLayer, Marker, Popup, ZoomControl, Polyline } from "react-leaflet";
 import { PointOfInterestContext } from "../pointOfInterest/PointOfInterestProvider";
+import { POIRoutesContext } from "../poiRoutes/POIRoutesProvider";
 import { SearchBox } from "../searchbox/SearchBox";
 import { SearchContext } from "../searchbox/SearchProvider";
 
-export const RoadTripMap = () => {
+export const RoadTripMap = ({ homeCoords, pointOfInterests, tripId }) => {
 
   const { selectedLocations, setSelectedLocations } = useContext(SearchContext);
 
-  const { pointOfInterests, getPointOfInterests, savePointOfInterest } = useContext(PointOfInterestContext);
+  const { savePointOfInterest } = useContext(PointOfInterestContext);
 
-  const { tripId } = useParams();
+  const { routes } = useContext(POIRoutesContext);
 
-  useEffect(() => {
-    getPointOfInterests(tripId);
-  }, []);
 
   return (
-    <MapContainer style={{height: '100vh', width: '75vw'}}  center={[38.047639685322494, -81.12339107346091]} zoom={13} zoomControl={false} scrollWheelZoom={false}>
+    <MapContainer style={{height: '100vh', width: '75vw'}}  center={homeCoords} zoom={13} zoomControl={false} scrollWheelZoom={true}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <SearchBox />
       <ZoomControl position="bottomleft"/>
-      <Marker position={[38.047639685322494, -81.12339107346091]}>
+      <Marker position={homeCoords}>
         <Popup>
-          A pretty CSS3 popup. <br /> Easily customizable.
+          This is set as your home address <br /> Is this not your home address? Are you lost?
         </Popup>
       </Marker>
       {
@@ -62,6 +59,12 @@ export const RoadTripMap = () => {
             </Popup>
           </Marker>
         ))
+      }
+      {
+        routes.map((route, i) => {
+          const coords = route.map(c => c.reverse());
+          return <Polyline key={i}  pathOptions={{ color: 'lime' }} positions={coords} />
+        })
       }
     </MapContainer>
   );
