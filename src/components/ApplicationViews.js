@@ -4,17 +4,20 @@ import { TripProvider } from "./trip/TripProvider";
 import { TripPlan } from "./trip/TripPlan";
 import { SearchProvider } from "./searchbox/SearchProvider";
 import { PointOfInterestProvider } from "./pointOfInterest/PointOfInterestProvider";
+import { POIRoutesProvider } from "./poiRoutes/POIRoutesProvider";
 
 export const ApplicationViews = ({ user }) => {
   return (
     <TripProvider userId={user.id} >
       <PointOfInterestProvider>
-        <SearchProvider>
-          <Routes>
-            <Route path='/' element={<TripList />} />
-            <Route path='/trips/:tripId' element={<TripPlan />} />
-          </Routes>
-        </SearchProvider>
+        <POIRoutesProvider>
+          <SearchProvider>
+            <Routes>
+              <Route path='/' element={<TripList />} />
+              <Route path='/trips/:tripId' element={<TripPlan homeCoords={user.homecoords} />} />
+            </Routes>
+          </SearchProvider>
+        </POIRoutesProvider>
       </PointOfInterestProvider>
     </TripProvider>
   );
