@@ -10,7 +10,7 @@ export const RoadTripMap = ({ homeCoords, pointOfInterests, tripId }) => {
 
   const { selectedLocations, setSelectedLocations } = useContext(SearchContext);
 
-  const { savePointOfInterest } = useContext(PointOfInterestContext);
+  const { savePointOfInterest, removePointOfInterest } = useContext(PointOfInterestContext);
 
   const { routes } = useContext(POIRoutesContext);
 
@@ -35,7 +35,9 @@ export const RoadTripMap = ({ homeCoords, pointOfInterests, tripId }) => {
             <Popup>
               {poi.textContents}
               <div></div>
-              <Button>Remove from Trip</Button>
+              <Button
+                onClick={() => removePointOfInterest(poi.id)}
+              >Remove from Trip</Button>
             </Popup>
           </Marker>
         ))
@@ -47,16 +49,18 @@ export const RoadTripMap = ({ homeCoords, pointOfInterests, tripId }) => {
             <Popup>
               {l.textContents}
               <div></div>
-              <Button onClick={
-                (e) => savePointOfInterest({
-                  tripId: +tripId,
-                  textContents: l.textContents,
-                  latlon: l.latlon
-                }).then(() => {
-                  e.target.remove();
-                  document.querySelector('.search-container input').value = '';
-                })
-              }>Add to Trip</Button>
+              <Button 
+                onClick={
+                  (e) => savePointOfInterest({
+                    tripId: +tripId,
+                    textContents: l.textContents,
+                    latlon: l.latlon
+                  }).then(() => {
+                    e.target.remove();
+                    document.querySelector('.search-container input').value = '';
+                  })
+                }
+              >Add to Trip</Button>
               {' '}
               <Button onClick={() => setSelectedLocations(selectedLocations.filter(sl => sl.textContents !== l.textContents))}>Remove from Map</Button>
             </Popup>
