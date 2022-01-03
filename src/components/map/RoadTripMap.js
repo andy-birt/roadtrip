@@ -35,7 +35,7 @@ export const RoadTripMap = ({ homeCoords, pointOfInterests, tripId }) => {
             <Popup>
               {poi.textContents}
               <div></div>
-              <Button>Remove Trip</Button>
+              <Button>Remove from Trip</Button>
             </Popup>
           </Marker>
         ))
@@ -48,10 +48,13 @@ export const RoadTripMap = ({ homeCoords, pointOfInterests, tripId }) => {
               {l.textContents}
               <div></div>
               <Button onClick={
-                () => savePointOfInterest({
+                (e) => savePointOfInterest({
                   tripId: +tripId,
                   textContents: l.textContents,
                   latlon: l.latlon
+                }).then(() => {
+                  e.target.remove();
+                  document.querySelector('.search-container input').value = '';
                 })
               }>Add to Trip</Button>
               {' '}
@@ -63,7 +66,7 @@ export const RoadTripMap = ({ homeCoords, pointOfInterests, tripId }) => {
       {
         routes.map((route, i) => {
           const coords = route.map(c => c.reverse());
-          return <Polyline key={i}  pathOptions={{ color: 'lime' }} positions={coords} />
+          return <Polyline key={i}  pathOptions={{ color: '#0d74d4' }} positions={coords} />
         })
       }
     </MapContainer>
