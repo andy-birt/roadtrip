@@ -23,7 +23,6 @@ export const SearchBox = () => {
     <div className="leaflet-top leaflet-left">
       <div className="search-container leaflet-control leaflet-bar">
         <input 
-          id="roadtrip-search-input" 
           className="form-control" 
           list="search-results" 
           placeholder="Search Here..." 
