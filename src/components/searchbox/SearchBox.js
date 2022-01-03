@@ -30,7 +30,7 @@ export const SearchBox = () => {
             (e) => {
               if (e.nativeEvent.inputType === 'insertText' && e.data !== ' ') {
                 setQuery(e.target.value);
-              } else {
+              } else if (e.nativeEvent.inputType !== 'deleteContentBackward' && e.nativeEvent.inputType !== 'deleteContentForward') {
                 const selected = results.find(r => r.display_name === e.target.value);
                 const location = new LatLng(+selected.lat, +selected.lon);
                 map.panTo(location);
