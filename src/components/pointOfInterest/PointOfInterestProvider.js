@@ -26,7 +26,7 @@ export const PointOfInterestProvider = (props) => {
   const removePointOfInterest = (poiId) => {
     return fetch(`http://localhost:8088/pointOfInterests/${poiId}`, {
       method: "DELETE"
-    });
+    }).then(getPointOfInterests);
   }
 
   return (
