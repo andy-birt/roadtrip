@@ -1,5 +1,5 @@
 import L from 'leaflet';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Row, Container } from "react-bootstrap";
 import { RoadTripMap } from "../map/RoadTripMap";
@@ -34,7 +34,7 @@ export const TripPlan = ({ homeCoords }) => {
     if (pointOfInterests.length === 0) {
       getPointOfInterests(tripId);
     } else {
-      const POICoords = [ homeCoords, ...pointOfInterests.map(poi => [poi.latlon.lat, poi.latlon.lng]) ];
+      const POICoords = [ [homeCoords[0], homeCoords[1]], ...pointOfInterests.map(poi => [poi.latlon.lat, poi.latlon.lng]) ];
       getRoutes(POICoords);
     }
   }, [pointOfInterests.length]);
