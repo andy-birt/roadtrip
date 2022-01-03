@@ -20,7 +20,7 @@ export const PointOfInterestProvider = (props) => {
       },
       body: JSON.stringify(poi)
     })
-    .then(getPointOfInterests);
+    .then(() => getPointOfInterests(poi.tripId));
   }
 
   const removePointOfInterest = (poiId) => {
