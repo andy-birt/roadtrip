@@ -15,6 +15,7 @@
   .trips {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
   }
   
   .trips a {
