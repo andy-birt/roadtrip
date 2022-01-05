@@ -1,6 +1,6 @@
 import L from 'leaflet';
 import { useContext, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Row, Container } from "react-bootstrap";
 import { RoadTripMap } from "../map/RoadTripMap";
 import { PointOfInterestContext } from "../pointOfInterest/PointOfInterestProvider";
@@ -23,25 +23,33 @@ L.Icon.Default.mergeOptions({
 
 export const TripPlan = ({ homeCoords }) => {
 
-  const { pointOfInterests, getPointOfInterests } = useContext(PointOfInterestContext);
+  const { pointOfInterests, getPointOfInterests, setPointOfInterests } = useContext(PointOfInterestContext);
 
-  const { getRoutes } = useContext(POIRoutesContext);
+  const { getRoutes, setRoutes } = useContext(POIRoutesContext);
 
   const { tripId } = useParams();
 
   useEffect(() => {
-
-    if (pointOfInterests.length === 0) {
-      getPointOfInterests(tripId);
-    } else {
-      const POICoords = [ [homeCoords[0], homeCoords[1]], ...pointOfInterests.map(poi => [poi.latlon.lat, poi.latlon.lng]) ];
-      getRoutes(POICoords);
-    }
-  }, [pointOfInterests.length]);
+    getPointOfInterests(tripId)
+    .then((pois) => {
+      if (pois.length !== 0) {
+        setPointOfInterests(pois);
+        const POICoords = [ [homeCoords[0], homeCoords[1]], ...pois.map(poi => [poi.latlon.lat, poi.latlon.lng]) ];
+        getRoutes(POICoords)
+        .then((res) => setRoutes(res));
+      } else {
+        setPointOfInterests([]);
+        setRoutes([]);
+      }
+    });
+  }, [tripId, pointOfInterests.length]);
 
   return (
     <div className="d-flex">
       <div className="point-of-interest-list">
+        <Container className="mt-2" >
+          <Link to="/" >&larr; Trips</Link>
+        </Container>
         <Container>
           <Row xs={1} className="g-4 pt-3">
             {pointOfInterests.map((poi) => (
