@@ -9,7 +9,7 @@ export const PointOfInterestProvider = (props) => {
   const getPointOfInterests = (tripId) => {
     return fetch(`http://localhost:8088/pointOfInterests?tripId=${tripId}`)
     .then(res => res.json())
-    .then(pois => setPointOfInterests(pois));
+    .then(pois => pois);
   }
 
   const savePointOfInterest = (poi) => {
@@ -31,7 +31,7 @@ export const PointOfInterestProvider = (props) => {
 
   return (
     <PointOfInterestContext.Provider value={{
-      pointOfInterests, getPointOfInterests, savePointOfInterest, removePointOfInterest
+      pointOfInterests, getPointOfInterests, savePointOfInterest, removePointOfInterest, setPointOfInterests
     }}>
       {props.children}
     </PointOfInterestContext.Provider>
