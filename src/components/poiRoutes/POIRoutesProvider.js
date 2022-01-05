@@ -12,13 +12,14 @@ export const POIRoutesProvider = (props) => {
     return fetch(`https://router.project-osrm.org/route/v1/driving/${URLCoords}?overview=full&geometries=geojson`)
     .then(res => res.json())
     .then(data => {
-      setRoutes(data.routes.map(r => r.geometry.coordinates.map(c => c.reverse())));
+      if(data.code === 'Ok') return data.routes.map(r => r.geometry.coordinates.map(c => c.reverse()));
+      else return false;
     });
   }
   
   return (
     <POIRoutesContext.Provider value={{
-      routes, getRoutes
+      routes, getRoutes, setRoutes
     }}>
       {props.children}
     </POIRoutesContext.Provider>
