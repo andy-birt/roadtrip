@@ -13,7 +13,7 @@ export const ApplicationViews = ({ user }) => {
         <POIRoutesProvider>
           <SearchProvider>
             <Routes>
-              <Route path='/' element={<TripList />} />
+              <Route path='/' element={<TripList userId={user.id} />} />
               <Route path='/trips/:tripId' element={<TripPlan homeCoords={user.homecoords} />} />
             </Routes>
           </SearchProvider>
