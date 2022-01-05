@@ -5,6 +5,7 @@ import { PointOfInterestContext } from "../pointOfInterest/PointOfInterestProvid
 import { POIRoutesContext } from "../poiRoutes/POIRoutesProvider";
 import { SearchBox } from "../searchbox/SearchBox";
 import { SearchContext } from "../searchbox/SearchProvider";
+import { RoadTripMapRef } from "./RoadTripMapRef";
 
 export const RoadTripMap = ({ homeCoords, pointOfInterests, tripId }) => {
 
@@ -27,6 +28,7 @@ export const RoadTripMap = ({ homeCoords, pointOfInterests, tripId }) => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+        <RoadTripMapRef />
         <SearchBox homeCoords={homeCoords} />
         <ZoomControl position="bottomleft"/>
         <Marker position={homeCoords}>
