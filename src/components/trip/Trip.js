@@ -11,7 +11,7 @@ export const Trip = ({ trip }) => {
             {trip.name}
           </Card.Title>
           <Card.Text>
-            This is a place to go
+            {trip.description}
           </Card.Text>
         </Card.Body>
       </Card>
