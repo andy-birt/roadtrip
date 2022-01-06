@@ -6,6 +6,7 @@ import { SearchProvider } from "./searchbox/SearchProvider";
 import { PointOfInterestProvider } from "./pointOfInterest/PointOfInterestProvider";
 import { POIRoutesProvider } from "./poiRoutes/POIRoutesProvider";
 import { RoadTripMapProvider } from "./map/RoadTripMapProvider";
+import { PlaceSearchProvider } from "./placeSearch/PlaceSearchProvider";
 
 export const ApplicationViews = ({ user }) => {
   return (
@@ -14,10 +15,12 @@ export const ApplicationViews = ({ user }) => {
         <PointOfInterestProvider>
           <POIRoutesProvider>
             <SearchProvider>
-              <Routes>
-                <Route path='/' element={<TripList userId={user.id} />} />
-                <Route path='/trips/:tripId' element={<TripPlan homeCoords={user.homecoords} />} />
-              </Routes>
+              <PlaceSearchProvider>
+                <Routes>
+                  <Route path='/' element={<TripList userId={user.id} />} />
+                  <Route path='/trips/:tripId' element={<TripPlan homeCoords={user.homecoords} />} />
+                </Routes>
+              </PlaceSearchProvider>
             </SearchProvider>
           </POIRoutesProvider>
         </PointOfInterestProvider>
