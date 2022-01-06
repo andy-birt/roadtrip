@@ -3,6 +3,7 @@ import { LatLng } from "leaflet";
 import { useMap } from "react-leaflet";
 import { SearchContext } from "./SearchProvider";
 import { POIRoutesContext } from "../poiRoutes/POIRoutesProvider";
+import { Spinner } from "react-bootstrap";
 import "./SearchBox.css";
 
 //* This is the actual component we will use in the map
@@ -16,10 +17,19 @@ export const SearchBox = ({ homeCoords }) => {
 
   const [ query, setQuery ] = useState('');
 
+  const [ loading, setLoading ] = useState(false);
+
   useEffect(() => {
+    const controller = new AbortController();
+
     if (query !== '' && query.length > 2) {
-      getResults(query);
+      setLoading(true);
+      getResults(query, controller.signal).then((res) => {
+        if (res !== 'AbortError') setLoading(false);
+      });
     }
+
+    return () => controller.abort();
   }, [query]);
 
   return (
@@ -63,6 +73,7 @@ export const SearchBox = ({ homeCoords }) => {
             }
           }
         />
+        { loading && <Spinner animation="border" role="status" /> }
         <datalist 
           className="search-results-datalist" 
           id="search-results"
