@@ -44,7 +44,7 @@ export const RoadTripMap = ({ homeCoords, pointOfInterests, tripId }) => {
                 {poi.textContents}
                 <div></div>
                 <Button
-                  onClick={() => removePointOfInterest(poi.id)}
+                  onClick={() => removePointOfInterest(poi.id, tripId)}
                 >Remove from Trip</Button>
               </Popup>
             </Marker>
