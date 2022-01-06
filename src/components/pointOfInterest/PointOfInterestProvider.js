@@ -9,7 +9,10 @@ export const PointOfInterestProvider = (props) => {
   const getPointOfInterests = (tripId) => {
     return fetch(`http://localhost:8088/pointOfInterests?tripId=${tripId}`)
     .then(res => res.json())
-    .then(pois => pois);
+    .then(pois => {
+      setPointOfInterests(pois);
+      return pois;
+    });
   }
 
   const savePointOfInterest = (poi) => {
@@ -23,10 +26,10 @@ export const PointOfInterestProvider = (props) => {
     .then(() => getPointOfInterests(poi.tripId));
   }
 
-  const removePointOfInterest = (poiId) => {
+  const removePointOfInterest = (poiId, tripId) => {
     return fetch(`http://localhost:8088/pointOfInterests/${poiId}`, {
       method: "DELETE"
-    }).then(getPointOfInterests);
+    }).then(() => getPointOfInterests(tripId));
   }
 
   return (
