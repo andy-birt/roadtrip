@@ -19,7 +19,7 @@ export const PlaceSearch = ({ homeCoords }) => {
   }, [map]);
 
   useEffect(() => {
-    if (!latlng.length) setLatlng(map.getCenter());
+    if (!latlng.length) setLatlng([map.getCenter().lat, map.getCenter().lng]);
     if (placeType) getNearbyPlaces(placeType, latlng);
 
     map.on('move', onMove);
