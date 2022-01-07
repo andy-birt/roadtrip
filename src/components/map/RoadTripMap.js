@@ -100,14 +100,30 @@ export const RoadTripMap = ({ homeCoords, pointOfInterests, tripId }) => {
           })
         }
         {
-          places.map((place, i) => {
-            console.log(place);
+          places.map((place) => {
             const loc = new LatLng(place.geocodes.main.latitude, place.geocodes.main.longitude);
             return (
               <Marker key={place.fsq_id}  position={loc}>
                 <Popup>
                   <p><strong>{place.name}</strong></p>
                   <p>{place.location.address} {place.location.locality} {place.location.region}</p>
+                  <ul>
+                    {
+                      place.categories.map(cat => <li>{cat.name}</li>)
+                    }
+                  </ul>
+                  <Button 
+                  onClick={
+                    () => savePointOfInterest({
+                      tripId: +tripId,
+                      textContents: `${place.name} ${place.location.address} ${place.location.locality}, ${place.location.region} ${place.location.postcode}`,
+                      latlon: {
+                        lat: place.geocodes.main.latitude,
+                        lng: place.geocodes.main.longitude
+                      }
+                    })
+                  }
+                >Add to Trip</Button>
                 </Popup>
               </Marker>
             );
