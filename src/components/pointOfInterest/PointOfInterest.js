@@ -6,13 +6,18 @@ import './PointOfInterest.css';
 
 export const PointOfInterest = ({ poi }) => {
 
-  const { map } = useContext(RoadTripMapContext);
+  const { map, setLatlng } = useContext(RoadTripMapContext);
+
+  const handleClick = () => {
+    map.panTo(poi.latlon);
+    setLatlng([poi.latlon.lat, poi.latlon.lng]);
+  }
   
   return (
     <Col>
       <Card 
         className="point-of-interest"
-        onClick={() => map.panTo(poi.latlon)}  
+        onClick={handleClick}  
       >
         <Card.Body>
           {
