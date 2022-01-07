@@ -16,13 +16,11 @@ export const PlaceSearch = ({ homeCoords }) => {
 
   const onMove = useCallback(() => {
     setLatlng([map.getCenter().lat, map.getCenter().lng]);
-  }, [map])
+  }, [map]);
 
   useEffect(() => {
     if (!latlng.length) setLatlng(map.getCenter());
     if (placeType) getNearbyPlaces(placeType, latlng);
-
-    console.log(latlng)
 
     map.on('move', onMove);
 
