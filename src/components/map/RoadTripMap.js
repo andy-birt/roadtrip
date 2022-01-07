@@ -1,6 +1,9 @@
 import { useContext } from "react";
 import { Button } from "react-bootstrap";
 import { MapContainer, TileLayer, Marker, Popup, ZoomControl, Polyline } from "react-leaflet";
+import { LatLng } from "leaflet";
+import { PlaceSearch } from "../placeSearch/PlaceSearch";
+import { PlaceSearchContext } from "../placeSearch/PlaceSearchProvider";
 import { PointOfInterestContext } from "../pointOfInterest/PointOfInterestProvider";
 import { POIRoutesContext } from "../poiRoutes/POIRoutesProvider";
 import { SearchBox } from "../searchbox/SearchBox";
@@ -14,6 +17,8 @@ export const RoadTripMap = ({ homeCoords, pointOfInterests, tripId }) => {
   const { savePointOfInterest, removePointOfInterest } = useContext(PointOfInterestContext);
 
   const { routes } = useContext(POIRoutesContext);
+
+  const { places } = useContext(PlaceSearchContext);
 
   const removeSelectedLocation = (loc) => {
     const remainingLocations = selectedLocations.filter(sl => sl.textContents !== loc.textContents);
@@ -29,7 +34,10 @@ export const RoadTripMap = ({ homeCoords, pointOfInterests, tripId }) => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <RoadTripMapRef />
-        <SearchBox homeCoords={homeCoords} />
+        <div className="leaflet-top leaflet-left">
+          <SearchBox homeCoords={homeCoords} />
+          <PlaceSearch homeCoords={homeCoords} />
+        </div>
         <ZoomControl position="bottomleft"/>
         <Marker position={homeCoords}>
           <Popup>
@@ -89,6 +97,20 @@ export const RoadTripMap = ({ homeCoords, pointOfInterests, tripId }) => {
           routes.map((route, i) => {
             const coords = route.map(c => c.reverse());
             return <Polyline key={i}  pathOptions={{ color: '#0d74d4' }} positions={coords} />
+          })
+        }
+        {
+          places.map((place, i) => {
+            console.log(place);
+            const loc = new LatLng(place.geocodes.main.latitude, place.geocodes.main.longitude);
+            return (
+              <Marker key={place.fsq_id}  position={loc}>
+                <Popup>
+                  <p><strong>{place.name}</strong></p>
+                  <p>{place.location.address} {place.location.locality} {place.location.region}</p>
+                </Popup>
+              </Marker>
+            );
           })
         }
       </MapContainer>
