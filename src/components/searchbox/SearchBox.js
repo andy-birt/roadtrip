@@ -33,56 +33,44 @@ export const SearchBox = ({ homeCoords }) => {
   }, [query]);
 
   return (
-    <div className="leaflet-top leaflet-left">
-      <div className="search-container leaflet-control leaflet-bar">
-        <input 
-          className="form-control" 
-          list="search-results" 
-          placeholder="Search Here..." 
-          onInput={
-            (e) => {
-              if (e.nativeEvent.inputType === 'insertText' && e.data !== ' ') {
-                setQuery(e.target.value);
-              } else if (e.nativeEvent.inputType !== 'deleteContentBackward' && e.nativeEvent.inputType !== 'deleteContentForward') {
-                const selected = results.find(r => r.display_name === e.target.value);
-                const location = new LatLng(+selected.lat, +selected.lon);
-                map.panTo(location);
-                getRoutes([[homeCoords[0], homeCoords[1]], [location.lat, location.lng]])
-                .then((res) => {
-                  if (res) {
-                    setSelectedLocations([
-                      ...selectedLocations,
-                      {
-                        textContents: selected.display_name,
-                        latlon: location,
-                        isRoutable: true
-                      }
-                    ]);
-                  } else {
-                    setSelectedLocations([
-                      ...selectedLocations,
-                      {
-                        textContents: selected.display_name,
-                        latlon: location,
-                        isRoutable: false
-                      }
-                    ]);
+    <div className="search-container leaflet-control leaflet-bar">
+      <input 
+        className="form-control" 
+        list="search-results" 
+        placeholder="Search Here..." 
+        onInput={
+          (e) => {
+            if (e.nativeEvent.inputType === 'insertText' && e.data !== ' ') {
+              setQuery(e.target.value);
+            } else if (e.nativeEvent.inputType !== 'deleteContentBackward' && e.nativeEvent.inputType !== 'deleteContentForward') {
+              const selected = results.find(r => r.display_name === e.target.value);
+              const location = new LatLng(+selected.lat, +selected.lon);
+              map.panTo(location);
+              getRoutes([[homeCoords[0], homeCoords[1]], [location.lat, location.lng]])
+              .then((res) => {
+                const isRoutable = res ? true : false;
+                setSelectedLocations([
+                  ...selectedLocations,
+                  {
+                    textContents: selected.display_name,
+                    latlon: location,
+                    isRoutable: isRoutable
                   }
-                })
-              }
+                ]);
+              });
             }
           }
-        />
-        { loading && <Spinner animation="border" role="status" /> }
-        <datalist 
-          className="search-results-datalist" 
-          id="search-results"
-        >
-        {
-          results.map(r => <option key={r.place_id} value={r.diaply_name}>{r.display_name}</option>)
         }
-        </datalist>
-      </div> 
-    </div>
+      />
+      { loading && <Spinner animation="border" role="status" /> }
+      <datalist 
+        className="search-results-datalist" 
+        id="search-results"
+      >
+      {
+        results.map(r => <option key={r.place_id} value={r.diaply_name}>{r.display_name}</option>)
+      }
+      </datalist>
+    </div> 
   );
 }
