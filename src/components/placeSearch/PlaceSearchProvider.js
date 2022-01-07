@@ -2,13 +2,15 @@ import { createContext, useState } from "react";
 
 export const PlaceSearchContext = createContext();
 
+const convertToMeters = m => 1609 * m;
+
 export const PlaceSearchProvider = (props) => {
 
   const [ places, setPlaces ] = useState([]);
 
-  const getNearbyPlaces = (q, ll, r, sortBy) => {
+  const getNearbyPlaces = (q, ll, r = 15) => {
 
-    const RT_KEY = require("../../../config/config.json")["rt-key"];
+    const RT_KEY = require("../../config/config.json")["rt-key"];
 
     const options = {
       method: "GET",
@@ -17,14 +19,10 @@ export const PlaceSearchProvider = (props) => {
         Authorization: RT_KEY
       }
     };
-    // Coffee
-    // Restaurant
-    // Bar
-    // Lodging
-    // Gas
-    return fetch(`https://api.foursquare.com/v3/places/search?query=${q}&ll=${ll[0]}%2C${ll[1]}&radius=${r}&sort=${sortBy}`, options)
+
+    return fetch(`https://api.foursquare.com/v3/places/search?query=${q}&ll=${ll[0]}%2C${ll[1]}&radius=${convertToMeters(r)}`, options)
     .then(res => res.json())
-    .then(places => setPlaces(places))
+    .then(places => setPlaces(places.results))
     .catch(e => console.error(e));
   }
 
