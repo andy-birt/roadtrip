@@ -9,12 +9,15 @@ import { POIRoutesContext } from "../poiRoutes/POIRoutesProvider";
 import { SearchBox } from "../searchbox/SearchBox";
 import { SearchContext } from "../searchbox/SearchProvider";
 import { RoadTripMapRef } from "./RoadTripMapRef";
+import { TripContext } from "../trip/TripProvider";
 
 export const RoadTripMap = ({ homeCoords, pointOfInterests, tripId }) => {
 
   const { selectedLocations, setSelectedLocations } = useContext(SearchContext);
 
   const { savePointOfInterest, removePointOfInterest } = useContext(PointOfInterestContext);
+
+  const { getTripById, savePointOfInterestOrder } = useContext(TripContext);
 
   const { routes } = useContext(POIRoutesContext);
 
@@ -71,9 +74,15 @@ export const RoadTripMap = ({ homeCoords, pointOfInterests, tripId }) => {
                       tripId: +tripId,
                       textContents: l.textContents,
                       latlon: l.latlon
-                    }).then(() => {
+                    }).then((pois) => {
                       removeSelectedLocation(l);
                       document.querySelector('.search-container input').value = '';
+                      getTripById(tripId)
+                      .then(trip => {
+                        const newPointOfInterestId = pois[pois.length-1].id.toString();
+                        const newOrder = [...trip.poiIds, newPointOfInterestId];
+                        savePointOfInterestOrder(trip.id, { poiIds: newOrder });
+                      });
                     })
                   }
                 >Add to Trip</Button>
@@ -111,7 +120,7 @@ export const RoadTripMap = ({ homeCoords, pointOfInterests, tripId }) => {
                   <p>{place.location.address} {place.location.locality} {place.location.region}</p>
                   <ul>
                     {
-                      place.categories.map(cat => <li>{cat.name}</li>)
+                      place.categories.map((cat, i) => <li key={i}>{cat.name}</li>)
                     }
                   </ul>
                   <Button 
@@ -123,6 +132,13 @@ export const RoadTripMap = ({ homeCoords, pointOfInterests, tripId }) => {
                         lat: place.geocodes.main.latitude,
                         lng: place.geocodes.main.longitude
                       }
+                    }).then(pois => {
+                      getTripById(tripId)
+                      .then(trip => {
+                        const newPointOfInterestId = pois[pois.length-1].id.toString();
+                        const newOrder = [...trip.poiIds, newPointOfInterestId];
+                        savePointOfInterestOrder(trip.id, { poiIds: newOrder });
+                      });
                     })
                   }
                 >Add to Trip</Button>
