@@ -24,7 +24,8 @@ export const PointOfInterestProvider = (props) => {
       },
       body: JSON.stringify(poi)
     })
-    .then(() => getPointOfInterests(poi.tripId));
+    .then(res => res.json())
+    .then((pointOfInterest) => getPointOfInterests(poi.tripId, [...pointOfInterests.map(poi => poi.id.toString()), pointOfInterest.id.toString()]));
   }
 
   const removePointOfInterest = (poiId, tripId) => {
