@@ -94,16 +94,18 @@ export const RoadTripMap = ({ homeCoords, pointOfInterests, tripId }) => {
           )
         }
         {
+          //* Iterate over the routes in the trip
           routes.map((route, i) => {
             const coords = route.map(c => c.reverse());
             return <Polyline key={i}  pathOptions={{ color: '#0d74d4' }} positions={coords} />
           })
         }
         {
-          places.map((place) => {
+          //* If a user looks for nearby places they will iterate here
+          places.map((place, i) => {
             const loc = new LatLng(place.geocodes.main.latitude, place.geocodes.main.longitude);
             return (
-              <Marker key={place.fsq_id}  position={loc}>
+              <Marker key={i}  position={loc}>
                 <Popup>
                   <p><strong>{place.name}</strong></p>
                   <p>{place.location.address} {place.location.locality} {place.location.region}</p>
