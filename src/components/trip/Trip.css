@@ -18,7 +18,7 @@
     flex-wrap: wrap;
   }
   
-  .trips a {
+  .trips .card {
     flex-basis: 33%;
   }
 }
