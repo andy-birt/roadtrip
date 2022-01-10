@@ -21,13 +21,17 @@ export const RoadTripMap = ({ homeCoords, pointOfInterests, tripId }) => {
 
   const { routes } = useContext(POIRoutesContext);
 
-  const { places } = useContext(PlaceSearchContext);
+  const { places, setPlaces } = useContext(PlaceSearchContext);
 
   const removeSelectedLocation = (loc) => {
     const remainingLocations = selectedLocations.filter(sl => sl.textContents !== loc.textContents);
     setSelectedLocations(remainingLocations);
   }
 
+  const removeSelectedPlace = (loc) => {
+    const remainingPlaces = places.filter(place => JSON.stringify(place) !== JSON.stringify(loc));
+    setPlaces(remainingPlaces);
+  }
 
   return (
     <div>
@@ -133,6 +137,7 @@ export const RoadTripMap = ({ homeCoords, pointOfInterests, tripId }) => {
                         lng: place.geocodes.main.longitude
                       }
                     }).then(pois => {
+                      removeSelectedPlace(place);
                       getTripById(tripId)
                       .then(trip => {
                         const newPointOfInterestId = pois[pois.length-1].id.toString();
