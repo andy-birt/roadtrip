@@ -31,7 +31,10 @@ export const PointOfInterestProvider = (props) => {
   const removePointOfInterest = (poiId, tripId) => {
     return fetch(`http://localhost:8088/pointOfInterests/${poiId}`, {
       method: "DELETE"
-    }).then(() => getPointOfInterests(tripId));
+    }).then(() => {
+      const newOrder = pointOfInterests.map(poi => poi.id.toString()).filter(id => id !== poiId.toString());
+      getPointOfInterests(tripId, newOrder);
+    });
   }
 
   return (
