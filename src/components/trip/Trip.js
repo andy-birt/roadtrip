@@ -1,20 +1,29 @@
-import { Card } from "react-bootstrap";
+import { Button, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./Trip.css"
 
 export const Trip = ({ trip }) => {
   return (
-    <Link to={`/trips/${trip.id}`}>
-      <Card className='trip'>
+    <Card className='trip'>
         <Card.Body>
           <Card.Title>
-            {trip.name}
+            <Link to={`/trips/${trip.id}`}>
+              {trip.name}
+            </Link>
           </Card.Title>
           <Card.Text>
             {trip.description}
           </Card.Text>
+          <Button variant='outline-success'>
+            <i className='bi bi-pencil-square' ></i>
+            Edit
+          </Button>
+          {' '}
+          <Button variant='outline-danger'>
+            <i className='bi bi-trash'></i>
+            Delete
+          </Button>
         </Card.Body>
       </Card>
-    </Link>
   );
 }
