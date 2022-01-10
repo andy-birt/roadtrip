@@ -28,7 +28,7 @@ export const PlaceSearchProvider = (props) => {
 
   return (
     <PlaceSearchContext.Provider value={{
-      places, getNearbyPlaces
+      places, getNearbyPlaces, setPlaces
     }}>
       {props.children}
     </PlaceSearchContext.Provider>
