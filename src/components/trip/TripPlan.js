@@ -82,11 +82,11 @@ export const TripPlan = ({ homeCoords }) => {
 
   return (
     <div className="d-flex">
-      <div className="point-of-interest-list">
+      <div>
         <Container className="mt-2" >
           <Link to="/" >&larr; Trips</Link>
         </Container>
-        <Container>
+        <Container className="point-of-interest-list">
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId={tripId}>
               {provided => (
