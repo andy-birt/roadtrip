@@ -6,12 +6,13 @@ export const PointOfInterestProvider = (props) => {
 
   const [ pointOfInterests, setPointOfInterests ] = useState([]);
 
-  const getPointOfInterests = (tripId) => {
+  const getPointOfInterests = (tripId, order) => {
     return fetch(`http://localhost:8088/pointOfInterests?tripId=${tripId}`)
     .then(res => res.json())
     .then(pois => {
-      setPointOfInterests(pois);
-      return pois;
+      const orderedPointOfInterests = order.map(poiId => pois.find(poi => poi.id === +poiId));
+      setPointOfInterests(orderedPointOfInterests);
+      return orderedPointOfInterests;
     });
   }
 
