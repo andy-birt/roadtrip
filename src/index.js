@@ -4,6 +4,7 @@ import './index.css';
 import { RoadTrip } from './components/RoadTrip';
 import { BrowserRouter as Router } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'leaflet/dist/leaflet.css'
 
 ReactDOM.render(
