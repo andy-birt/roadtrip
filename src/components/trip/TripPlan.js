@@ -82,7 +82,7 @@ export const TripPlan = ({ homeCoords }) => {
 
   return (
     <div className="d-flex">
-      <div>
+      <div style={{ flexBasis: '25%' }}>
         <Container className="mt-2" >
           <Link to="/" >&larr; Trips</Link>
         </Container>
