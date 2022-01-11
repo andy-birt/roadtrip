@@ -3,6 +3,7 @@ import { Button, CardGroup, Container, Form, FormControl, FormGroup, FormLabel, 
 import { useNavigate } from "react-router-dom";
 import { TripContext } from "./TripProvider";
 import { Trip } from "./Trip";
+import { StartLocationMap } from "../map/StartLocationMap";
 
 export const TripList = ({ userId }) => {
 
@@ -47,6 +48,14 @@ export const TripList = ({ userId }) => {
               <FormControl id="name" value={trip.name}  placeholder="Enter a Name for Your Trip" onChange={handleInputChange} />
               <FormLabel>Description</FormLabel>
               <FormControl id="description" as="textarea" value={trip.description}  placeholder="Enter a Description About Your Trip" onChange={handleInputChange} />
+              {
+                //* If editing the trip don't set a different starting location 
+                !trip.id &&
+                <>
+                  <FormLabel>Starting Location</FormLabel>
+                  <StartLocationMap trip={trip} setTrip={setTrip} />
+                </>
+              }
             </FormGroup>
           </Modal.Body>
           <Modal.Footer>
