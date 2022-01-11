@@ -6,18 +6,18 @@ import { Trip } from "./Trip";
 
 export const TripList = ({ userId }) => {
 
-  const { trips, getTrips, saveTrip } = useContext(TripContext);
+  const { trips, getTrips, saveTrip, updateTrip } = useContext(TripContext);
 
   const [ showModal, setShowModal ] = useState(false);
 
-  const [ newTrip, setNewTrip ] = useState({ userId });
+  const [ trip, setTrip ] = useState({ userId });
 
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
-    const newTripValue = { ...newTrip };
-    newTripValue[e.target.id] = e.target.value
-    setNewTrip(newTripValue);
+    const newTripValue = { ...trip };
+    newTripValue[e.target.id] = e.target.value;
+    setTrip(newTripValue);
   }
 
   useEffect(() => {
@@ -28,7 +28,10 @@ export const TripList = ({ userId }) => {
     <Container>
       <h2>Trips</h2>
       <Button className='mb-2'
-        onClick={() => setShowModal(true)}
+        onClick={() => {
+          setShowModal(true);
+          setTrip({});
+        }}
       >New Trip</Button>
       <Modal
         show={showModal}
@@ -41,22 +44,29 @@ export const TripList = ({ userId }) => {
           <Modal.Body>
             <FormGroup>
               <FormLabel>Trip Name</FormLabel>
-              <FormControl id="name" placeholder="Enter a Name for Your Trip" onChange={handleInputChange} />
+              <FormControl id="name" value={trip.name}  placeholder="Enter a Name for Your Trip" onChange={handleInputChange} />
               <FormLabel>Description</FormLabel>
-              <FormControl id="description" as="textarea" placeholder="Enter a Description About Your Trip" onChange={handleInputChange} />
+              <FormControl id="description" as="textarea" value={trip.description}  placeholder="Enter a Description About Your Trip" onChange={handleInputChange} />
             </FormGroup>
           </Modal.Body>
           <Modal.Footer>
             <Button 
-              onClick={() => saveTrip(newTrip).then((trip) => navigate(`/trips/${trip.id}`))} 
+              onClick={() => {
+                if (trip.id) {
+                  setShowModal(false);
+                  updateTrip(trip).then(() => getTrips());
+                } else {
+                  saveTrip({ ...trip, userId: userId, poiIds: [] }).then((trip) => navigate(`/trips/${trip.id}`));
+                }
+              }} 
               variant="primary"
-            >Create Trip</Button>
+            >{trip.id ? 'Edit' : 'Create'} Trip</Button>
           </Modal.Footer>
         </Form>
       </Modal>
       <CardGroup bsPrefix='trips'>
         {
-          trips.map(trip => <Trip key={trip.id} trip={trip}/>)
+          trips.map(trip => <Trip key={trip.id} trip={trip} setShowModal={setShowModal} setTrip={setTrip}/>)
         }
       </CardGroup>
     </Container>
