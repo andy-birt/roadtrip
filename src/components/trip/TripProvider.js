@@ -27,6 +27,16 @@ export const TripProvider = (props) => {
     }).then(res => res.json());
   }
 
+  const updateTrip = (trip) => {
+    return fetch(`http://localhost:8088/trips/${trip.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(trip)
+    });
+  }
+
   const savePointOfInterestOrder = (tripId, order) => {
     return fetch(`http://localhost:8088/trips/${tripId}`, {
       method: "PATCH",
@@ -42,13 +52,13 @@ export const TripProvider = (props) => {
   const deleteTrip = (tripId) => {
     return fetch(`http://localhost:8088/trips/${tripId}`, {
       method: "DELETE"
-    });
+    }).then(getTrips);
   }
 
   return (
     <TripContext.Provider
       value={{
-        trips, getTrips, getTripById, saveTrip, deleteTrip, savePointOfInterestOrder
+        trips, getTrips, getTripById, saveTrip, deleteTrip, savePointOfInterestOrder, updateTrip
       }}
     >
       {props.children}
