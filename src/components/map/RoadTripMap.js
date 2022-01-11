@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import { MapContainer, TileLayer, Marker, Popup, ZoomControl, Polyline } from "react-leaflet";
 import { LatLng } from "leaflet";
@@ -32,6 +32,10 @@ export const RoadTripMap = ({ homeCoords, pointOfInterests, tripId }) => {
     const remainingPlaces = places.filter(place => JSON.stringify(place) !== JSON.stringify(loc));
     setPlaces(remainingPlaces);
   }
+
+  useEffect(() => {
+    return () => setPlaces([]);
+  }, [])
 
   return (
     <div>
