@@ -18,7 +18,7 @@ export const ApplicationViews = ({ user }) => {
               <PlaceSearchProvider>
                 <Routes>
                   <Route path='/' element={<TripList userId={user.id} />} />
-                  <Route path='/trips/:tripId' element={<TripPlan homeCoords={user.homecoords} />} />
+                  <Route path='/trips/:tripId' element={<TripPlan />} />
                 </Routes>
               </PlaceSearchProvider>
             </SearchProvider>

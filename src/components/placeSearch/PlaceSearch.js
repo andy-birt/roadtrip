@@ -4,7 +4,7 @@ import { useMap } from "react-leaflet";
 import { RoadTripMapContext } from "../map/RoadTripMapProvider";
 import { PlaceSearchContext } from "./PlaceSearchProvider";
 
-export const PlaceSearch = ({ homeCoords }) => {
+export const PlaceSearch = () => {
 
   const { latlng, setLatlng } = useContext(RoadTripMapContext); 
 

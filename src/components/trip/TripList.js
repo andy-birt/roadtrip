@@ -45,7 +45,7 @@ export const TripList = ({ userId }) => {
           <Modal.Body>
             <FormGroup>
               <FormLabel>Trip Name</FormLabel>
-              <FormControl id="name" value={trip.name}  placeholder="Enter a Name for Your Trip" onChange={handleInputChange} />
+              <FormControl id="name" defaultValue={trip.name} placeholder="Enter a Name for Your Trip" onChange={handleInputChange} />
               <FormLabel>Description</FormLabel>
               <FormControl id="description" as="textarea" value={trip.description}  placeholder="Enter a Description About Your Trip" onChange={handleInputChange} />
               {
@@ -65,7 +65,8 @@ export const TripList = ({ userId }) => {
                   setShowModal(false);
                   updateTrip(trip).then(() => getTrips());
                 } else {
-                  saveTrip({ ...trip, userId: userId, poiIds: [] }).then((trip) => navigate(`/trips/${trip.id}`));
+                  if (trip.homeCoords) saveTrip({ ...trip, userId: userId, poiIds: [] }).then((trip) => navigate(`/trips/${trip.id}`));
+                  else alert("You didn't select a location");
                 }
               }} 
               variant="primary"

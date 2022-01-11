@@ -23,7 +23,7 @@ L.Icon.Default.mergeOptions({
 
 
 
-export const TripPlan = ({ homeCoords }) => {
+export const TripPlan = () => {
 
   const { pointOfInterests, getPointOfInterests } = useContext(PointOfInterestContext);
 
@@ -35,6 +35,8 @@ export const TripPlan = ({ homeCoords }) => {
 
   const [ poiIdOrder, setPoiIdOrder ] = useState([]);
 
+  const [ homeCoords, setHomeCoords ] = useState(null);
+
   const isArrayEqual = (a, b) => {
     return JSON.stringify(a) === JSON.stringify(b);
   }
@@ -42,7 +44,7 @@ export const TripPlan = ({ homeCoords }) => {
   const createRoute = (poiIds, tripId) => {
     getPointOfInterests(tripId, poiIds)
     .then((pois) => {
-      if (pois.length !== 0) {
+      if (pois.length !== 0 && homeCoords) {
         const POICoords = [ [homeCoords[0], homeCoords[1]], ...pois.map(poi => [poi.latlon.lat, poi.latlon.lng]) ];
         getRoutes(POICoords)
         .then((res) => setRoutes(res));
@@ -72,6 +74,7 @@ export const TripPlan = ({ homeCoords }) => {
 
     getTripById(tripId)
     .then((trip) => {
+      setHomeCoords(trip.homeCoords);
       if (!isArrayEqual(trip.poiIds, poiIdOrder)) {
         setPoiIdOrder(trip.poiIds);
       }
@@ -112,7 +115,7 @@ export const TripPlan = ({ homeCoords }) => {
           </DragDropContext>
         </Container>
       </div>
-      <RoadTripMap homeCoords={homeCoords} pointOfInterests={pointOfInterests} tripId={tripId}/>
+      { homeCoords && <RoadTripMap homeCoords={homeCoords} pointOfInterests={pointOfInterests} tripId={tripId}/> }
     </div>
   );
 }
