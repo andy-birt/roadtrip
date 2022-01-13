@@ -23,16 +23,68 @@ export const RoadTripMap = ({ homeCoords, pointOfInterests, tripId }) => {
 
   const { places, setPlaces } = useContext(PlaceSearchContext);
 
+  //? Removes selected location from the map where location source is the search bar and result is added to the map
   const removeSelectedLocation = (loc) => {
     const remainingLocations = selectedLocations.filter(sl => sl.textContents !== loc.textContents);
     setSelectedLocations(remainingLocations);
   }
 
+  //? Remove selected place from the map where place is a nearby location for amenities (ex. food, coffee, motel etc...)
   const removeSelectedPlace = (loc) => {
     const remainingPlaces = places.filter(place => JSON.stringify(place) !== JSON.stringify(loc));
     setPlaces(remainingPlaces);
   }
 
+  //? After a point of interest is removed from the trip refactor the order of point of interest to visit 
+  const refactorOrderAfterAdding = (trip, pois) => {
+    const newPointOfInterestId = pois[pois.length-1].id.toString();
+    const newOrder = [...trip.poiIds, newPointOfInterestId];
+    savePointOfInterestOrder(trip.id, { poiIds: newOrder });
+  }
+
+  //? Add a place to the trip such as nearby coffee shop or motel 
+  const addPlaceToTrip = (place) => {
+    savePointOfInterest({
+      tripId: +tripId,
+      textContents: `${place.name} ${place.location.address} ${place.location.locality}, ${place.location.region} ${place.location.postcode}`,
+      latlon: {
+        lat: place.geocodes.main.latitude,
+        lng: place.geocodes.main.longitude
+      }
+    }).then(pois => {
+      removeSelectedPlace(place);
+      setPlaces([]);
+      getTripById(tripId)
+      .then(trip => {
+        refactorOrderAfterAdding(trip, pois);
+      });
+    });
+  }
+
+  //? Add location derived from the search bar to the map
+  const addSelectedLocationToTrip = (l) => {
+    savePointOfInterest({
+      tripId: +tripId,
+      textContents: l.textContents,
+      latlon: l.latlon
+    }).then((pois) => {
+      removeSelectedLocation(l);
+      document.querySelector('.search-container input').value = '';
+      getTripById(tripId)
+      .then(trip => {
+        refactorOrderAfterAdding(trip, pois);
+      });
+    });
+  }
+
+  //? Remove point of interest from trip 
+  const removePointOfInterestFromTrip = (poi) => {
+    const newPoiOrder = pointOfInterests.map(poi => poi.id.toString()).filter(id => id !== poi.id.toString());
+    savePointOfInterestOrder(tripId, { poiIds: newPoiOrder });
+    removePointOfInterest(poi.id, tripId);
+  }
+
+  //? Only when component is cleaning up remove the nearby places 
   useEffect(() => {
     return () => setPlaces([]);
   }, [])
@@ -52,7 +104,7 @@ export const RoadTripMap = ({ homeCoords, pointOfInterests, tripId }) => {
         <ZoomControl position="bottomleft"/>
         <Marker position={homeCoords}>
           <Popup>
-            This is set as your home address <br /> Is this not your home address? Are you lost?
+            This is set as your starting location <br /> If you wish to have a different starting location, make a new trip.
           </Popup>
         </Marker>
         {
@@ -63,11 +115,7 @@ export const RoadTripMap = ({ homeCoords, pointOfInterests, tripId }) => {
                 {poi.textContents}
                 <div></div>
                 <Button
-                  onClick={() => {
-                    const newPoiOrder = pointOfInterests.map(poi => poi.id.toString()).filter(id => id !== poi.id.toString());
-                    savePointOfInterestOrder(tripId, { poiIds: newPoiOrder });
-                    removePointOfInterest(poi.id, tripId);
-                  }}
+                  onClick={() => removePointOfInterestFromTrip(poi)}
                 >Remove from Trip</Button>
               </Popup>
             </Marker>
@@ -81,22 +129,7 @@ export const RoadTripMap = ({ homeCoords, pointOfInterests, tripId }) => {
                 {l.textContents}
                 <div></div>
                 <Button 
-                  onClick={
-                    () => savePointOfInterest({
-                      tripId: +tripId,
-                      textContents: l.textContents,
-                      latlon: l.latlon
-                    }).then((pois) => {
-                      removeSelectedLocation(l);
-                      document.querySelector('.search-container input').value = '';
-                      getTripById(tripId)
-                      .then(trip => {
-                        const newPointOfInterestId = pois[pois.length-1].id.toString();
-                        const newOrder = [...trip.poiIds, newPointOfInterestId];
-                        savePointOfInterestOrder(trip.id, { poiIds: newOrder });
-                      });
-                    })
-                  }
+                  onClick={() => addSelectedLocationToTrip(l)}
                 >Add to Trip</Button>
                 {' '}
                 <Button onClick={() => removeSelectedLocation(l)}>Remove from Map</Button>
@@ -136,24 +169,7 @@ export const RoadTripMap = ({ homeCoords, pointOfInterests, tripId }) => {
                     }
                   </ul>
                   <Button 
-                  onClick={
-                    () => savePointOfInterest({
-                      tripId: +tripId,
-                      textContents: `${place.name} ${place.location.address} ${place.location.locality}, ${place.location.region} ${place.location.postcode}`,
-                      latlon: {
-                        lat: place.geocodes.main.latitude,
-                        lng: place.geocodes.main.longitude
-                      }
-                    }).then(pois => {
-                      removeSelectedPlace(place);
-                      getTripById(tripId)
-                      .then(trip => {
-                        const newPointOfInterestId = pois[pois.length-1].id.toString();
-                        const newOrder = [...trip.poiIds, newPointOfInterestId];
-                        savePointOfInterestOrder(trip.id, { poiIds: newOrder });
-                      });
-                    })
-                  }
+                  onClick={() => addPlaceToTrip(place)}
                 >Add to Trip</Button>
                 </Popup>
               </Marker>

@@ -38,9 +38,7 @@ export const Trip = ({ trip, setShowModal, setTrip }) => {
           </Button>
           {' '}
           <Button 
-            onClick={() => {
-              setShowDeleteModal(true);
-            }}
+            onClick={() => setShowDeleteModal(true)}
             variant='outline-danger'
           >
             <i className='bi bi-trash'></i>

@@ -36,6 +36,11 @@ export const SearchBox = ({ homeCoords, setStartingLocation }) => {
       //* Else the trip is a new trip and it needs a starting location
       if (homeCoords) {
         map.setView(location, 13);
+
+        //? Before placing the selected location onto the map
+        //? Check to see if the location can be routed from the starting location
+        //? For example, if the user is in mainland US they won't be able to drive to Hawaii
+        //? So the unroutable location can be added to the map just not the trip
         getRoutes([[homeCoords[0], homeCoords[1]], [location.lat, location.lng]])
         .then((res) => {
           const isRoutable = res ? true : false;
@@ -50,6 +55,8 @@ export const SearchBox = ({ homeCoords, setStartingLocation }) => {
         });
       } else {
         map.setView([location.lat + 0.01, location.lng], 13);
+
+        //? Each time user selects a new location on the starting map it will replace the previous one
         setStartingLocation({
           position: location,
           textContents: selected.display_name
@@ -58,16 +65,19 @@ export const SearchBox = ({ homeCoords, setStartingLocation }) => {
     }
   }
 
+  //* This useEffect uses an abort controller that will cancel the fetch request if necessary 
   useEffect(() => {
     const controller = new AbortController();
 
     if (query !== '' && query.length > 2) {
       setLoading(true);
       getResults(query, controller.signal).then((res) => {
+        //? This will keep the load spinner on screen if fetch was cancelled
         if (res !== 'AbortError') setLoading(false);
       });
     }
-
+    //? When the component reloads before getting a response just cancel the request
+    //? in the return, it's basically the clean up function of the useEffect
     return () => controller.abort();
   }, [query]);
 

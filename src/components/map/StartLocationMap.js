@@ -33,7 +33,6 @@ export const StartLocationMap = ({ trip, setTrip }) => {
       </div>
       <ZoomControl position="bottomleft"/>
       {
-        // console.log(!isEmpty(startingLocation))
         !isEmpty(startingLocation) ? 
         <Marker position={startingLocation.position}>
           <Popup>
